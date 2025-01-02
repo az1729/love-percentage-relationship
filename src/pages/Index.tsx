@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Progress } from "@/components/ui/progress";
 import { HeartIcon } from "lucide-react";
 
 const Index = () => {
@@ -24,29 +23,37 @@ const Index = () => {
   }, [result]);
 
   const calculateLove = () => {
-    // Reset progress for new calculation
     setProgress(0);
     
-    // Simple algorithm to generate a love percentage based on names
     const combinedNames = (name1 + name2).toLowerCase();
     let sum = 0;
     for (let i = 0; i < combinedNames.length; i++) {
       sum += combinedNames.charCodeAt(i);
     }
-    const percentage = sum % 101; // Generates a number between 0-100
+    const percentage = sum % 101;
 
-    // Determine relationship type based on percentage
+    // Expanded relationship types based on percentage ranges
     let relationship = "";
     if (percentage >= 90) {
-      relationship = "Soulmates! 💑";
+      relationship = "Soulmates 💫";
+    } else if (percentage >= 80) {
+      relationship = "True Love 💑";
     } else if (percentage >= 70) {
-      relationship = "Perfect Match! 💕";
+      relationship = "Marriage Material 💍";
+    } else if (percentage >= 60) {
+      relationship = "Deep Affection 💝";
     } else if (percentage >= 50) {
-      relationship = "Good Friends 👫";
+      relationship = "Best Friends Forever 🤝";
+    } else if (percentage >= 40) {
+      relationship = "Close Friends 👥";
     } else if (percentage >= 30) {
-      relationship = "Just Friends 🤝";
+      relationship = "Siblings at Heart 👫";
+    } else if (percentage >= 20) {
+      relationship = "Friendly Acquaintances 🌟";
+    } else if (percentage >= 10) {
+      relationship = "Complicated 🤔";
     } else {
-      relationship = "Better as Friends 🙂";
+      relationship = "Rivals 🔥";
     }
 
     setResult({ percentage, relationship });
@@ -89,16 +96,40 @@ const Index = () => {
           {result && (
             <Alert className="mt-4 bg-pink-50/80 border-pink-200">
               <AlertDescription className="text-center space-y-4">
-                <div className="w-32 h-32 mx-auto relative">
-                  <Progress 
-                    value={progress} 
-                    className="h-32 w-32 [&>div]:bg-gradient-to-r [&>div]:from-pink-500 [&>div]:to-purple-500 transition-all duration-1000 ease-out"
-                  />
+                <div className="relative w-32 h-32 mx-auto">
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle
+                      cx="64"
+                      cy="64"
+                      r="60"
+                      fill="none"
+                      stroke="#f3e8ff"
+                      strokeWidth="8"
+                    />
+                    <circle
+                      cx="64"
+                      cy="64"
+                      r="60"
+                      fill="none"
+                      stroke="url(#gradient)"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      strokeDasharray={`${2 * Math.PI * 60}`}
+                      strokeDashoffset={`${2 * Math.PI * 60 * (1 - progress / 100)}`}
+                      className="transition-all duration-1000 ease-out"
+                    />
+                    <defs>
+                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#ec4899" />
+                        <stop offset="100%" stopColor="#a855f7" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <span className="text-2xl font-bold text-pink-600">{progress}%</span>
                   </div>
                 </div>
-                <div className="text-lg text-gray-700 font-medium">
+                <div className="text-lg text-gray-700 font-medium mt-4">
                   {result.relationship}
                 </div>
               </AlertDescription>
